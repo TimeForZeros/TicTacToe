@@ -31,9 +31,9 @@ function init() {
     ]
     turn = -1;
     winner = null;
+    counter = 0;
 }
 
-init();
 document.querySelector('section.board').addEventListener('click', handleClick);
 function handleClick(evt) {
     
@@ -41,20 +41,21 @@ function handleClick(evt) {
     if (winner) return;
     board[idx] = turn;
     turn *= -1;
-  //  winner = getWinner();
+    counter++;
+    winner = getWinner();
     render();
-
+    console.log(counter);
 // 5) Handle a player clicking a square
 function render() {
   board.forEach(function(p, idx) {
     positions[idx].style.backgroundColor = PLAYER[p];
   });
   if (winner === 'T') {
-    message.innerHTML = 'Rats, another tie!';
+    message.innerHTML = 'TIE!';
   } else if (winner) {
-    message.innerHTML = `Congrats ${PLAYER[winner].toUpperCase()}!`;
+    message.innerHTML = `Congrats ${PLAYER[winner]}!`;
   } else {
-    message.innerHTML = `${PLAYER[turn].toUpperCase()}'s Turn`;
+    message.innerHTML = `${PLAYER[turn]}'s Turn`;
   }
 }
 }
@@ -63,23 +64,18 @@ function getWinner() {
   for (var i = 0; i < winningCombos.length; i++) {
     if (Math.abs(board[winningCombos[i][0]] + board[winningCombos[i][1]] + board[winningCombos[i][2]]) === 3) return board[winningCombos[i][0]];
   }
-  if (board.includes(null)) return null;
-  return 'T';
+  if (counter > 8) return 'T';
+  return;
 }
 // 6) Handle a player clicking the replay button: calls init() function
-document.getElementById('resetButton').addEventListener('click', init);
-                  // board.forEach(function(colArr, colIdx) {
-                  //    /* let marker = document.getElementById(`col${colIdx}`);
-                  //     marker.style.visibility = colArr.indexOf(0) === -1 ? 'hidden' : 'visible';
-                  //          if (colArr.indexOf(0) === -1) {
-                  //             marker.style.visibility = 'hidden';
-                  //         }
-                  //         else {
-                  //             marker.style.visibility = 'visible';
-                  //         }*/
-                  //           colArr.forEach(function(cell, rowIdx) {
-                  //               let div = document.getElementById(`c${colIdx}r${rowIdx}`);
-                  //               // div.createTextNode = PLAYER[cell];
-                  //             // div.style.backgroundColor = 
-                  //         });
-                  // });
+document.getElementById('resetButton').addEventListener('click', reset);
+//document.getElementById('resetButton').addEventListener('click', reset());
+function reset(){
+  board.forEach(function(p, idx) {
+    positions[idx].style.backgroundColor = PLAYER[0];
+    
+  })
+  console.log('RESET');
+  return init();
+}
+init();
